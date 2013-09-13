@@ -2,6 +2,7 @@
 
 var fs = require('fs');
 var path = require('path');
+var mkdirp = require('mkdirp');
 var Sequelize = require('sequelize');
 
 // 設定:
@@ -19,13 +20,17 @@ module.exports = function ($youmeb, $injector, $config, $generator, $prompt) {
     done();
   });
 
+  var getSequelize = function (config) {
+    return new Sequelize(config.db || 'youmeb-app', config.username || 'root', config.password || '123', config.options || {});
+  };
+
   this.on('init', function (config, done) {
     if ($youmeb.isCli) {
       return done();
     }
 
-    var sequelize = new Sequelize(config.db || 'youmeb-app', config.username || 'root', config.password || '123', config.options || {});
-
+    var sequelize = getSequelize(config);
+    
     sequelize.Sequelize = Sequelize;
 
     // 重新註冊 sequelize
@@ -90,6 +95,7 @@ module.exports = function ($youmeb, $injector, $config, $generator, $prompt) {
     });
   });
 
+  // generator
   $youmeb.on('cli-sequelize:generate:model', function (parser, args, done) {
     $prompt.get([
       {
@@ -113,6 +119,70 @@ module.exports = function ($youmeb, $injector, $config, $generator, $prompt) {
       generate.createFile('./model.js', './' + result.name + '.js', {
         name: result.name
       }, done);
+    });
+  });
+
+  $youmeb.on('cli-sequelize:generate:model', function (parser, args, done) {
+  });
+
+  // migrator
+  $youmeb.on('cli-sequelize:migrate', function (parser, args, done) {
+    var config = $config.namespace('sequelize');
+    var sequelize = getSequelize(config);
+    var migratorOptions = {
+      path: path.join($youmeb.root, config.get('migrationsDir') || 'migrations')
+    };
+    var migrator = sequelize.getMigrator(migratorOptions);
+
+    fs.exists(migratorOptions.path, function (exists) {
+      (exists ? function (migrate) {
+        migrate();
+      } : function (migrate) {
+        mkdirp(migratorOptions.path, function (err) {
+          if (err) {
+            return done(err);
+          }
+          migrate();
+        });
+      })(function () {
+        sequelize.migrate().success(function() {
+          done();
+        });
+      });
+    });
+  };
+
+  $youmeb.on('cli-sequelize:migrate-undo', function (parser, args, done) {
+    var config = $config.namespace('sequelize');
+    var sequelize = getSequelize(config);
+    var migratorOptions = {
+      path: path.join($youmeb.root, config.get('migrationsDir') || 'migrations')
+    };
+    var migrator = sequelize.getMigrator(migratorOptions);
+
+    fs.exists(migratorOptions.path, function (exists) {
+      (exists ? function (migrate) {
+        migrate();
+      } : function (migrate) {
+        mkdirp(migratorOptions.path, function (err) {
+          if (err) {
+            return done(err);
+          }
+          migrate();
+        });
+      })(function () {
+        sequelize.migrator.findOrCreateSequelizeMetaDAO().success(function(Meta) {
+          Meta.find({ order: 'id DESC' }).success(function(meta) {
+            if (meta) {
+              meta.path = migratorOptions.path;
+              migrator = sequelize.getMigrator(meta, true);
+            }
+            migrator.migrate({ method: 'down' }).success(function() {
+              done();
+            });
+          });
+        });
+      });
     });
   });
 };
