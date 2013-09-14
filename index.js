@@ -3,6 +3,7 @@
 var fs = require('fs');
 var path = require('path');
 var mkdirp = require('mkdirp');
+var moment = require('moment');
 var Sequelize = require('sequelize');
 
 // 設定:
