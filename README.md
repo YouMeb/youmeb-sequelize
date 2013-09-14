@@ -8,6 +8,6 @@ youmeb-sequelize
 ## Usage
 
 * `$ sequelize:generate:migration`
-* `$ sequelize:generate:mode`
+* `$ sequelize:generate:model`
 * `$ sequelize:migrate`
 * `$ sequelize:migrate-undo`
