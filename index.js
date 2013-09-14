@@ -25,7 +25,7 @@ module.exports = function ($youmeb, $injector, $config, $generator, $prompt) {
   });
 
   var getSequelize = function (config) {
-    return new Sequelize(config.db || 'youmeb-app', config.username || 'root', config.password || '123', config.options || {});
+    return new Sequelize(config.get('db') || 'youmeb-app', config.get('username') || 'root', config.get('password') || '123', config.get('options') || {});
   };
 
   this.on('init', function (config, done) {
@@ -146,6 +146,12 @@ module.exports = function ($youmeb, $injector, $config, $generator, $prompt) {
       ].join('-') + '.js';
 
       var generator = $generator.create(path.join(__dirname, 'templates'), path.join($youmeb.root, $config.get('sequelize.migrationsDir') || 'migrations'));
+
+      generator.on('create', function (file) {
+        console.log();
+        console.log('  create '.yellow + file);
+        console.log();
+      });
 
       generator.createFile('./migration.js', './' + migrationName + '.js', {}, done);
     });
