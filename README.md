@@ -5,6 +5,9 @@ youmeb-sequelize
 
     $ npm install youmeb-sequelize
 
-## Quick start
+## Usage
 
-    $ youmeb sequelize:generate:model
+* `$ sequelize:generate:migration`
+* `$ sequelize:generate:mode`
+* `$ sequelize:migrate`
+* `$ sequelize:migrate-undo`
