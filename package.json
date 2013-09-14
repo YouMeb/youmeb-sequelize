@@ -1,11 +1,12 @@
 {
   "name": "youmeb-sequelize",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "youmeb-sequelize ================",
   "main": "index.js",
   "dependencies": {
     "sequelize": "~2.0.0-beta.0",
-    "mkdirp": "~0.3.5"
+    "mkdirp": "~0.3.5",
+    "moment": "~2.2.1"
   },
   "devDependencies": {},
   "scripts": {

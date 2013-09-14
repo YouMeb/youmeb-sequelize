@@ -16,7 +16,10 @@ var Sequelize = require('sequelize');
 module.exports = function ($youmeb, $injector, $config, $generator, $prompt) {
 
   $youmeb.on('help', function (command, data, done) {
-    data.commands.push(['sequelize:generate:model', '', 'Generates a model']);
+    data.commands.push(['sequelize:generate:model', '', 'Generates a sequelize model']);
+    data.commands.push(['sequelize:generate:migration', '', 'Generates a sequelize migration']);
+    data.commands.push(['sequelize:migrate', '', '']);
+    data.commands.push(['sequelize:migrate-undo', '', '']);
     done();
   });
 
@@ -43,7 +46,7 @@ module.exports = function ($youmeb, $injector, $config, $generator, $prompt) {
           return importDone(err);
         }
         var i = 0;
-        var isJs = /\.js/;
+        var isJs = /\.js$/i;
         (function next() {
           var file = files[i++];
           if (!file) {
@@ -108,21 +111,42 @@ module.exports = function ($youmeb, $injector, $config, $generator, $prompt) {
         return done(err);
       }
 
-      var generate = $generator.create(path.join(__dirname, 'templates'), path.join($youmeb.root, $config.get('sequelize.modelsDir') || 'models'));
+      var generator = $generator.create(path.join(__dirname, 'templates'), path.join($youmeb.root, $config.get('sequelize.modelsDir') || 'models'));
 
-      generate.on('create', function (file) {
+      generator.on('create', function (file) {
         console.log();
         console.log('  create '.yellow + file);
         console.log();
       });
 
-      generate.createFile('./model.js', './' + result.name + '.js', {
+      generator.createFile('./model.js', './' + result.name + '.js', {
         name: result.name
       }, done);
     });
   });
 
-  $youmeb.on('cli-sequelize:generate:model', function (parser, args, done) {
+  $youmeb.on('cli-sequelize:generate:migration', function (parser, args, done) {
+    $prompt.get([
+      {
+        name: 'name',
+        type: 'string',
+        default: 'unnamed-migration',
+        required: false
+      }
+    ], function (err, result) {
+      if (err) {
+        return done(err);
+      }
+
+      var migrationName = [
+        moment().format('YYYYMMDDHHmmss'),
+        result.name
+      ].join('-') + '.js';
+
+      var generator = $generator.create(path.join(__dirname, 'templates'), path.join($youmeb.root, $config.get('sequelize.migrationsDir') || 'migrations'));
+
+      generator.createFile('./migration.js', './' + migrationName + '.js', {}, done);
+    });
   });
 
   // migrator
@@ -150,7 +174,7 @@ module.exports = function ($youmeb, $injector, $config, $generator, $prompt) {
         });
       });
     });
-  };
+  });
 
   $youmeb.on('cli-sequelize:migrate-undo', function (parser, args, done) {
     var config = $config.namespace('sequelize');
