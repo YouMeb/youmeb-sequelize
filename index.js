@@ -78,7 +78,8 @@ module.exports = function ($youmeb, $injector, $config, $generator, $prompt) {
 
     // sequelize.import 目錄下所有檔案
     // 最後執行 index.js，讓使用者設定關聯
-    importDir(path.join($youmeb.root, config.get('modelsDir') || 'models'), function (err) {
+    var dir = path.join($youmeb.root, config.get('modelsDir') || 'models');
+    importDir(dir, function (err) {
       if (err) {
         return done(err);
       }
@@ -87,7 +88,7 @@ module.exports = function ($youmeb, $injector, $config, $generator, $prompt) {
       try {
         index = require(dir);
       } catch (e) {
-        return done(e);
+        return done(null);
       }
 
       if (typeof index === 'function') {
@@ -120,7 +121,7 @@ module.exports = function ($youmeb, $injector, $config, $generator, $prompt) {
       });
 
       generator.createFile('./model.js', './' + result.name + '.js', {
-        name: result.name
+        name: result.name[0].toUpperCase() + result.name.substr(1)
       }, done);
     });
   });
