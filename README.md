@@ -5,6 +5,24 @@ youmeb-sequelize
 
     $ npm install youmeb-sequelize
 
+## Config
+
+config/default.json
+
+    {
+      ...
+
+      packages: {
+        ...
+
+        sequelize: {
+          "db": "youmeb",
+          "username": "poying",
+          "password": "123123"
+        }
+      }
+    }
+
 ## Usage
 
 * `$ sequelize:generate:migration`
