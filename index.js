@@ -146,7 +146,7 @@ module.exports = function ($youmeb, $injector, $config, $generator, $prompt) {
       var migrationName = [
         moment().format('YYYYMMDDHHmmss'),
         result.name
-      ].join('-') + '.js';
+      ].join('-');
 
       var generator = $generator.create(path.join(__dirname, 'templates'), path.join($youmeb.root, $config.get('sequelize.migrationsDir') || 'migrations'));
 
