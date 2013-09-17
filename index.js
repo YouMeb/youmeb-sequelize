@@ -30,6 +30,9 @@ module.exports = function ($youmeb, $injector, $config, $generator, $prompt) {
 
   this.on('init', function (config, done) {
     if ($youmeb.isCli) {
+      $injector.register('sequelize', {
+        model: function () {} // 變免執行 youmeb routes 的時候出錯
+      });
       return done();
     }
 
