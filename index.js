@@ -27,15 +27,11 @@ module.exports = function ($youmeb, $injector, $config, $generator, $prompt) {
 
   var getSequelize = function (config) {
     var db = config.get('db') || 'youmeb-app';
-    var password = config.get('password');
-    var username = config.get('username') || 'root';
+    var password = config.get('password') || null;
+    var username = config.get('username') || null;
     var options = config.get('options') || {};
 
-    if (password) {
-      return new Sequelize(db, username, password, options);
-    } else {
-      return new Sequelize(db, username, options);
-    }
+    return new Sequelize(db, username, password, options);
   };
 
   this.on('init', function (config, done) {
