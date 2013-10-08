@@ -2,6 +2,7 @@
 
 var fs = require('fs');
 var path = require('path');
+var util = require('util');
 var mkdirp = require('mkdirp');
 var moment = require('moment');
 var Sequelize = require('sequelize');
@@ -25,7 +26,16 @@ module.exports = function ($youmeb, $injector, $config, $generator, $prompt) {
   });
 
   var getSequelize = function (config) {
-    return new Sequelize(config.get('db') || 'youmeb-app', config.get('username') || 'root', config.get('password') || '123', config.get('options') || {});
+    var db = config.get('db') || 'youmeb-app';
+    var password = config.get('password');
+    var username = config.get('username') || 'root';
+    var options = config.get('options') || {};
+
+    if (password) {
+      return new Sequelize(db, username, password, options);
+    } else {
+      return new Sequelize(db, username, options);
+    }
   };
 
   this.on('init', function (config, done) {

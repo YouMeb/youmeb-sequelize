@@ -1,6 +1,6 @@
 {
   "name": "youmeb-sequelize",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "youmeb-sequelize ================",
   "main": "index.js",
   "dependencies": {
