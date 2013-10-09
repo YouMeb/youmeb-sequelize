@@ -1,6 +1,8 @@
 youmeb-sequelize
 ================
 
+Before you install this package, you must install mysql and npm install mysql
+
 ## Installaction
 
     $ npm install youmeb-sequelize
