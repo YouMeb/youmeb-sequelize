@@ -1,7 +1,7 @@
 youmeb-sequelize
 ================
 
-Before you install this package, you must install mysql and npm install mysql
+Before you install this package, you must install mysql and `$ npm install mysql
 
 ## Installaction
 
@@ -21,7 +21,9 @@ config/default.json
           "db": "youmeb",
           "username": "poying",
           "password": "123123".
-          "options": {}
+          "options": {
+                "host": "yourhostUrl"
+          }
         }
       }
     }
