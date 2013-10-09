@@ -20,7 +20,7 @@ config/default.json
         sequelize: {
           "db": "youmeb",
           "username": "poying",
-          "password": "123123".
+          "password": "123123",
           "options": {
                 "host": "yourhostUrl"
           }
