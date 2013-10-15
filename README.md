@@ -1,15 +1,22 @@
-youmeb-sequelize
+Youmeb-sequelize
 ================
+Youmeb-sequelize is a communicated 
 
-Before you install this package, you must install mysql and `$ npm install mysql
+
+
+Before you install this package, you must install :
+
+* mysql :
+* npm mysql : `$ npm install mysql`
+
 
 ## Installaction
 
     $ npm install youmeb-sequelize
 
-## Config
+## Setting Config
 
-config/default.json
+Edit `/config/default.json` file:
 
     {
       ...
@@ -22,7 +29,7 @@ config/default.json
           "username": "poying",
           "password": "123123",
           "options": {
-                "host": "yourhostUrl"
+                "host": "yourDBhostUrl"
           }
         }
       }
